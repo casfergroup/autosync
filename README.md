@@ -1,2 +1,2 @@
-# rclone
-Rclone container with cron automation
+# Autosync
+Sync files with cron automation
