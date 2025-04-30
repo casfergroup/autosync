@@ -10,7 +10,7 @@ download_with_retries() {
 
     while [ "$attempt" -le "$max_attempts" ]; do
         echo "Attempt $attempt to download from $S3_REMOTE:$S3_PATH to /data via rclone..."
-        if rclone sync "$S3_REMOTE:$S3_PATH" /data/; then
+        if rclone sync "$S3_REMOTE:$S3_PATH" /data/ 2>&1; then
             echo "Download successful."
             return 0
         else
