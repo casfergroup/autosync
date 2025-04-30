@@ -16,6 +16,7 @@ if [ "$ENABLE_CRON" = "true" ]; then
     /download.sh
 
     echo "Cron is enabled. Installing crontab and starting crond..."
+    mkdir -p /root/.cache
     crontab /crontab
 
     # Ensure log file exists
