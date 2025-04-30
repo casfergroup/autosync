@@ -3,16 +3,6 @@
 # === File Permissions ==
 #umask 077
 
-# == ENV Validation ==
-required_vars="S3_REMOTE S3_PATH"
-for var in $required_vars; do
-    eval "value=\${$var}"
-    if [ -z "$value" ]; then
-        echo "Error: Required variable $var is not set!"
-        exit 1
-    fi
-done
-
 # === Function to download with rclone ===
 download_with_retries() {
     attempt=1
