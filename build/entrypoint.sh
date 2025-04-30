@@ -14,9 +14,16 @@ done
 if [ "$ENABLE_CRON" = "true" ]; then
     echo "1st run"
     /download.sh
+
     echo "Cron is enabled. Installing crontab and starting crond..."
     crontab /crontab
-    cron -f | tail -f /tmp/stdout
+
+    # Ensure log file exists
+    touch /var/log/cron.log
+    chmod 666 /var/log/cron.log
+
+    # Start crond in foreground and write logs to /var/log/cron.log
+    exec crond -f -L /var/log/cron.log
 else
     echo "Cron is disabled. Running entrypoint.sh directly..."
     /download.sh
