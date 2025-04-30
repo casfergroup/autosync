@@ -22,8 +22,8 @@ if [ "$ENABLE_CRON" = "true" ]; then
     touch /var/log/cron.log
     chmod 666 /var/log/cron.log
 
-    # Start crond in foreground and write logs to /var/log/cron.log
-    exec crond -f -L /var/log/cron.log
+    # Start crond in foreground
+    exec crond -f -s
 else
     echo "Cron is disabled. Running entrypoint.sh directly..."
     /download.sh
