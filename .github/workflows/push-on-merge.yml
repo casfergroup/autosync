@@ -1,91 +1,59 @@
-name: Push to Docker Hub on merge
+name: PR Tests
 permissions:
   contents: read
-  security-events: write
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
       - 'build/**'
-  schedule:
-    - cron: '0 0 1 * *'
 
 jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image and export locally (for SAST scan)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./build
+          tags: casfergroup/autosync:test
+          load: true 
+          platforms: linux/amd64
+
+      - name: Save image to tar file
+        run: docker save casfergroup/autosync:test -o autosync.tar
+
+      - name: Upload image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: autosync-image
+          path: autosync.tar
+
   sast:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./build
+    needs: docker-build
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: autosync-image
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Load Docker image
+        run: docker load -i autosync.tar
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Validate build configuration
-      uses: docker/build-push-action@v6
-      with:
-        call: check
-        context: ./build
-
-    - name: Build image locally (do not push yet)
-      uses: docker/build-push-action@v6
-      with:
-        context: ./build
-        platforms: linux/amd64
-        push: false
-        load: true
-        tags: casfergroup/autosync:latest
-
-    - name: Run Trivy scan and generate SARIF (fail on CRITICAL and HIGH)
-      uses: aquasecurity/trivy-action@0.30.0
-      with:
-        image-ref: 'casfergroup/autosync:latest'
-        format: 'sarif'
-        severity: 'CRITICAL,HIGH'
-        exit-code: '1'
-        output: 'trivy-results.sarif'
-
-    - name: Upload Trivy SARIF to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: 'trivy-results.sarif'
-
-  docker-push:
-    runs-on: ubuntu-latest
-    needs: sast
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Build and push multi-arch image
-      uses: docker/build-push-action@v6
-      with:
-        context: ./build
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: casfergroup/autosync:latest
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@0.31.0
+        with:
+              image-ref: 'casfergroup/autosync:test'
+              format: 'table'
+              severity: 'CRITICAL,HIGH,MEDIUM'
+              exit-code: '1'
