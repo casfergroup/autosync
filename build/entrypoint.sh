@@ -1,8 +1,11 @@
 #!/bin/sh
 set -e  # Exit immediately if any command fails
 
+# == Import functions ==
+source /scripts/build_crontab.sh
+
 # == ENV Validation ==
-required_vars="S3_REMOTE S3_PATH"
+local required_vars="S3_REMOTE S3_PATH"
 for var in $required_vars; do
     eval "value=\${$var}"
     if [ -z "$value" ]; then
@@ -11,21 +14,23 @@ for var in $required_vars; do
     fi
 done
 
-if [ "$ENABLE_CRON" = "true" ]; then
+# == Main code ==
+if [ "$CRON_ENABLE" = "true" ]; then
     echo "1st run"
-    /download.sh
+    /scripts/download.sh
 
     echo "Cron is enabled. Preparing crontab..."
 
     mkdir -p /root/.cache
 
     # Create a temporary crontab with env vars at the top
-    {
-        echo "S3_REMOTE=\"$S3_REMOTE\""
-        echo "S3_PATH=\"$S3_PATH\""
-        echo "ENABLE_CRON=\"$ENABLE_CRON\""
-        cat /crontab
-    } > /tmp/crontab
+    # {
+    #     echo "S3_REMOTE=\"$S3_REMOTE\""
+    #     echo "S3_PATH=\"$S3_PATH\""
+    #     echo "ENABLE_CRON=\"$ENABLE_CRON\""
+    #     cat /crontab
+    # } > /tmp/crontab
+    build_crontab > /tmp/crontab
 
     # Install the new crontab
     crontab /tmp/crontab
@@ -38,5 +43,5 @@ if [ "$ENABLE_CRON" = "true" ]; then
     exec crond -f -s
 else
     echo "Cron is disabled. Running download.sh directly..."
-    /download.sh
+    /scripts/download.sh
 fi

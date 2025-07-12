@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# === File Permissions ==
+# == File Permissions ==
 #umask 077
 
-# === Function to download with rclone ===
+# == Function to download with rclone ==
 download_with_retries() {
     attempt=1
     max_attempts=3
@@ -23,7 +23,7 @@ download_with_retries() {
     return 1
 }
 
-# === Main logic ===
+# == Main logic ==
 if download_with_retries; then
     echo "Download succeeded at $(date)"
 else
