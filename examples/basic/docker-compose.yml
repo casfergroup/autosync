@@ -1,0 +1,10 @@
+services:
+  autodumper:
+    image: casfergroup/autodumper:latest
+    environment:
+      - ENABLE_CRON=true
+      - S3_REMOTE=myremote
+      - S3_PATH=mybucket/backups
+    volumes:
+      - ./rclone.conf:/root/.config/rclone/rclone.conf:ro
+    restart: unless-stopped
