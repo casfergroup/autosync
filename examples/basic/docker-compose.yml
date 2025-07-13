@@ -1,8 +1,9 @@
 services:
-  autodumper:
-    image: casfergroup/autodumper:latest
+  autosync:
+    image: casfergroup/autosync:latest
     environment:
-      - ENABLE_CRON=true
+      - CRON_ENABLE=true
+      - CRON_TIME="*/1 * * * *"
       - S3_REMOTE=myremote
       - S3_PATH=mybucket/backups
     volumes:

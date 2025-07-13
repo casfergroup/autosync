@@ -2,7 +2,8 @@ FROM alpine:latest
 
 ENV S3_REMOTE=""
 ENV S3_PATH=""
-ENV ENABLE_CRON="false"
+ENV CRON_ENABLE="false"
+ENV CRON_TIME="*/5 * * * *"
 
 # Install dependencies
 RUN apk update && \
@@ -15,11 +16,14 @@ RUN apk update && \
 WORKDIR /data
 
 # Copy script and crontab
-COPY download.sh /download.sh
-COPY crontab /crontab
+COPY ./scripts/ /scripts/
 COPY entrypoint.sh /entrypoint.sh
 
-RUN chmod +x /download.sh /entrypoint.sh
+# Logs
+RUN touch /var/log/cron.log \
+    && chmod 666 /var/log/cron.log
+
+RUN chmod -R +x /entrypoint.sh /scripts/
 
 # Use a wrapper script to control cron behavior
 CMD ["/entrypoint.sh"]
