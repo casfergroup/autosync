@@ -19,7 +19,11 @@ WORKDIR /data
 COPY ./scripts/ /scripts/
 COPY entrypoint.sh /entrypoint.sh
 
-RUN chmod +x /entrypoint.sh /scripts/download.sh
+# Logs
+RUN touch /var/log/cron.log \
+    && chmod 666 /var/log/cron.log
+
+RUN chmod -R +x /entrypoint.sh /scripts/
 
 # Use a wrapper script to control cron behavior
 CMD ["/entrypoint.sh"]

@@ -1,6 +1,6 @@
 services:
-  autodumper:
-    image: casfergroup/autodumper:latest
+  autosync:
+    image: casfergroup/autosync:latest
     environment:
       - ENABLE_CRON=true
       - S3_REMOTE=myremote
