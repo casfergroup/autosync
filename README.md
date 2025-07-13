@@ -24,5 +24,6 @@ See examples on examples/.
 Variable | Default | Required | Accepted Values | Description
 ---|---|---|---|---
 CRON_ENABLE | false | | `true`, `false` | Enables cron syncs
+CRON_TIME | */5 * * * * | | cron values | Sets a frequency for the job to run
 S3_REMOTE | *none* | X | string | Name of the remote on rclone.conf to be used
 S3_PATH | *none* | X | string | Path to sync on remote storage
