@@ -8,5 +8,5 @@ services:
       - S3_PATH=mybucket/backups
     volumes:
       - ./rclone.conf:/root/.config/rclone/rclone.conf:ro # Rclone config file
-      - /media/your_data:/data/ # Data synchronization mount point"
+      - /media/your_data:/data/ # Data synchronization mount point
     restart: unless-stopped

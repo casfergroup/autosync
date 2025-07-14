@@ -18,7 +18,7 @@ docker run --rm \
 
 ### Docker compose
 
-See examples on examples/.
+See examples on [examples/](examples).
 
 ## Environment Variables
 Variable | Default | Required | Accepted Values | Description
