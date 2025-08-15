@@ -3,7 +3,7 @@
 # == File Permissions ==
 #umask 077
 
-# == Function to download with rclone ==
+# == Function to copy from remote to local ==
 remote_to_local() {
     local action="$1"
     local attempt=1
