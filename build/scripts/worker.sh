@@ -24,6 +24,8 @@ remote_to_local() {
     return 1
 }
 
+# == Function to copy from local to remote ==
+
 # == Main logic ==
 main() {
     TASK=1 # Future feature
