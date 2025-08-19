@@ -49,11 +49,12 @@ local_to_remote() {
 
 # == Main logic ==
 main() {
-    JOB=1 # Future feature
-    
     case $JOB in
     1)
         remote_to_local sync
+        ;;
+    2)
+        local_to_remote sync
         ;;
     *)
         echo "An unexpected error occured!"
