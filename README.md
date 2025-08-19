@@ -32,7 +32,7 @@ JOB | 1 | | 1, 2 | Type of job (see following section)
 ### JOB
 Implement the functionality to synchronize data from remote to local, or from local to remote.
 
- Value   |    Description 
-  1 | Sync remote → local
-  2 | Sync local → remote
+Value   |    Description
+1 | Sync remote → local
+2 | Sync local → remote
 
