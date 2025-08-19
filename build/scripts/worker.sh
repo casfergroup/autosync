@@ -49,9 +49,9 @@ local_to_remote() {
 
 # == Main logic ==
 main() {
-    Job=1 # Future feature
+    JOB=1 # Future feature
     
-    case $Job in
+    case $JOB in
     1)
         remote_to_local sync
         ;;
