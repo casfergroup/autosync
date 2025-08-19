@@ -3,7 +3,7 @@
 # == File Permissions ==
 #umask 077
 
-# == Function to download with rclone ==
+# == Function to copy from remote to local ==
 remote_to_local() {
     local action="$1"
     local attempt=1
@@ -12,6 +12,29 @@ remote_to_local() {
     while [ "$attempt" -le "$max_attempts" ]; do
         echo "Attempt $attempt to $action from $S3_REMOTE:$S3_PATH to /data via rclone..."
         if rclone $action "$S3_REMOTE:$S3_PATH" /data/ 2>&1; then
+            echo "$action successful."
+            return 0
+        else
+            echo "$action failed on attempt $attempt."
+            attempt=$((attempt + 1))
+            sleep 5
+        fi
+    done
+
+    return 1
+}
+
+
+
+# == Function to copy from local to remote ==
+local_to_remote() {
+    local action="$1"
+    local attempt=1
+    local max_attempts="${2:-3}"
+
+    while [ "$attempt" -le "$max_attempts" ]; do
+        echo "Attempt $attempt to $action from /data to $S3_REMOTE:$S3_PATH via rclone..."
+        if rclone $action /data/ "$S3_REMOTE:$S3_PATH" 2>&1; then
             echo "$action successful."
             return 0
         else
