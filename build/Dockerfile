@@ -4,6 +4,7 @@ ENV S3_REMOTE=""
 ENV S3_PATH=""
 ENV CRON_ENABLE="false"
 ENV CRON_TIME="*/5 * * * *"
+ENV JOB=1
 
 # Install dependencies
 RUN apk update && \
