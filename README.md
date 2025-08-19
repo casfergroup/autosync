@@ -36,6 +36,6 @@ remote_to_local → download from remote to /data
 local_to_remote → upload from /data to remote
 
  Value   |    Description 
-  1       Sync remote → local    rclone sync "$S3_REMOTE:$S3_PATH" /data/
+  1 | Sync remote → local
   2       Sync local → remote    rclone sync /data/ "$S3_REMOTE:$S3_PATH"
 
