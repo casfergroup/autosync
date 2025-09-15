@@ -7,6 +7,7 @@ build_crontab() {
     echo "# Crontab generated on $(date)"
     echo "S3_REMOTE=\"$S3_REMOTE\""
     echo "S3_PATH=\"$S3_PATH\""
+    echo "JOB=\"$JOB\""
     echo "$CRON_TIME $CRON_EXPRESSION"
 }
 
